@@ -1,4 +1,4 @@
-# ActiveModelAttributes
+# ActiveModelAttributes [![Build Status](https://travis-ci.org/Azdaroth/active_model_attributes.svg?branch=master)](https://travis-ci.org/Azdaroth/active_model_attributes) [![Coverage Status](https://coveralls.io/repos/Azdaroth/active_model_attributes/badge.png?branch=master)](https://coveralls.io/r/Azdaroth/active_model_attributes?branch=master)
 
 Rails 5.0 comes with a great addition of ActiveRecord Attributes API. However, that's only for ActiveRecord, you can't really use it in you ActiveModel models. Fortunately, with this gem it's possible.
 
