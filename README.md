@@ -1,8 +1,6 @@
 # ActiveModelAttributes
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/active_model_attributes`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Rails 5.0 comes with a great addition of ActiveRecord Attributes API. However, that's only for ActiveRecord, you can't really use it in you ActiveModel models. Fortunately, with this gem it's possible.
 
 ## Installation
 
@@ -22,7 +20,62 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Define you ActiveModel model class, include `ActiveModel::Model` and `ActiveModelAttributes` modules and define attributes and their types using `attribute` class method:
+
+``` rb
+class MyAwesomeModel
+  include ActiveModel::Model
+  include ActiveModelAttributes
+
+  attribute :integer_field, :integer
+  attribute :string_field, :string
+  attribute :decimal_field, :decimal
+  attribute :boolean_field, :boolean
+end
+```
+
+You can also provide a default value for each attribute (either a raw value or a lambda):
+
+``` rb
+class MyAwesomeModel
+  include ActiveModel::Model
+  include ActiveModelAttributes
+
+  attribute :string_with_default, :string, default: "default string"
+  attribute :date_field, :date, default: -> { Date.new(2016, 1, 1) }
+end
+```
+
+You can get the list of defined attributes, their types and provided options by accessing `attributes_registry` class attribute, for instance:
+
+``` rb
+class MyAwesomeModel
+  include ActiveModel::Model
+  include ActiveModelAttributes
+
+  attribute :string_with_default, :string, default: "default string"
+end
+```
+
+```
+MyAwesomeModel.attributes_registry
+=> { string_with_default: [:string, { default: "default string" }] }
+```
+
+Here's a list of supported types:
+
+* big_integer
+* binary
+* boolean
+* date
+* datetime
+* decimal
+* float
+* immutable_string
+* integer
+* string
+* text
+* time
 
 ## Development
 

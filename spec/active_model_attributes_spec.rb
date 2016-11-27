@@ -4,14 +4,13 @@ require "active_model"
 describe ActiveModelAttributes do
   class ModelForAttributesTest
     include ActiveModel::Model
-    include ActiveModel::Dirty
     include ActiveModelAttributes
 
     attribute :integer_field, :integer
     attribute :string_field, :string
     attribute :decimal_field, :decimal
     attribute :string_with_default, :string, default: "default string"
-    attribute :date_field, :string, default: -> { Date.new(2016, 1, 1) }
+    attribute :date_field, :date, default: -> { Date.new(2016, 1, 1) }
     attribute :boolean_field, :boolean
   end
 
