@@ -77,6 +77,38 @@ Here's a list of supported types:
 * text
 * time
 
+You can also add your custom types. Just create a class inheriting from `ActiveModel::Type::Value` or already existing type, e.g. `ActiveModel::Type::Integer`, define `deserialize` method and register the new type:
+
+``` rb
+class SomeCustomMoneyType < ActiveModel::Type::Integer
+  def deserialize(value)
+    return super if value.kind_of?(Numeric)
+    return super if !value.to_s.include?('$')
+
+    price_in_dollars = BigDecimal.new(value.gsub(/\$/, ''))
+    super(price_in_dollars * 100)
+  end
+end
+
+ActiveModel::Type.register(:money, SomeCustomMoneyType)
+```
+
+Now you can use this type inside you ActiveModel models:
+
+```
+class ModelForAttributesTestWithCustomType
+  include ActiveModel::Model
+  include ActiveModelAttributes
+
+  attribute :price, :money
+end
+
+data = ModelForAttributesTestWithCustomType.new
+data.price = "$100.12"
+data.price
+=> 10012
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

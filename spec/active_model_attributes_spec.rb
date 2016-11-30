@@ -21,6 +21,24 @@ describe ActiveModelAttributes do
     attribute :integer_field, :string
   end
 
+  class SomeCustomMoneyType < ActiveModel::Type::Integer
+    def deserialize(value)
+      return super if value.kind_of?(Numeric)
+      return super if !value.to_s.include?('$')
+
+      price_in_dollars = BigDecimal.new(value.gsub(/\$/, ''))
+      super(price_in_dollars * 100)
+    end
+  end
+  ActiveModel::Type.register(:money, SomeCustomMoneyType)
+
+  class ModelForAttributesTestWithCustomType
+    include ActiveModel::Model
+    include ActiveModelAttributes
+
+    attribute :price, :money
+  end
+
   it "handles attributes assignment with proper type and with proper defaults" do
     data = ModelForAttributesTest.new(
       integer_field: "2.3",
@@ -74,11 +92,20 @@ describe ActiveModelAttributes do
     ]
     registry = GrandchildModelForAttributesTest.attributes_registry
 
-
     expect(registry.keys).to eq expected_attributes_keys
     expect(registry[:integer_field]).to eq [:string, {}]
     expect(registry[:decimal_field]).to eq [:decimal, {}]
     expect(registry[:string_with_default]).to eq [:string, { default: "default string" }]
     expect(registry[:date_field].last[:default].call).to eq Date.new(2016, 1, 1)
+  end
+
+  it "works with custom types" do
+    data = ModelForAttributesTestWithCustomType.new
+
+    expect(data.price).to eq nil
+
+    data.price = "$100.12"
+
+    expect(data.price).to eq 10012
   end
 end
