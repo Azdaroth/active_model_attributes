@@ -117,7 +117,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/active_model_attributes.
+Bug reports and pull requests are welcome on GitHub at https://github.com/Azdaroth/active_model_attributes.
 
 
 ## License
