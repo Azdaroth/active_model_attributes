@@ -32,7 +32,7 @@ module ActiveModelAttributes
 
     def define_attribute_writer(name, cast_type, options)
       define_method "#{name}=" do |val|
-        deserialized_value = ActiveModel::Type.lookup(cast_type).deserialize(val)
+        deserialized_value = ActiveModel::Type.lookup(cast_type).cast(val)
         instance_variable_set("@#{name}", deserialized_value)
       end
     end
