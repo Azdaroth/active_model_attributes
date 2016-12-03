@@ -77,11 +77,11 @@ Here's a list of supported types:
 * text
 * time
 
-You can also add your custom types. Just create a class inheriting from `ActiveModel::Type::Value` or already existing type, e.g. `ActiveModel::Type::Integer`, define `deserialize` method and register the new type:
+You can also add your custom types. Just create a class inheriting from `ActiveModel::Type::Value` or already existing type, e.g. `ActiveModel::Type::Integer`, define `cast` method and register the new type:
 
 ``` rb
 class SomeCustomMoneyType < ActiveModel::Type::Integer
-  def deserialize(value)
+  def cast(value)
     return super if value.kind_of?(Numeric)
     return super if !value.to_s.include?('$')
 

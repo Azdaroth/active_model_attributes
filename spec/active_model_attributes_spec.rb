@@ -22,7 +22,7 @@ describe ActiveModelAttributes do
   end
 
   class SomeCustomMoneyType < ActiveModel::Type::Integer
-    def deserialize(value)
+    def cast(value)
       return super if value.kind_of?(Numeric)
       return super if !value.to_s.include?('$')
 
