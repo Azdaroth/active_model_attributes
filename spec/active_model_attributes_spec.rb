@@ -39,6 +39,40 @@ describe ActiveModelAttributes do
     attribute :price, :money
   end
 
+  class CustomStructWithOptionableType
+    include ActiveModel::Model
+    include ActiveModelAttributes
+
+    attribute :setting, :integer
+    attribute :something_else, :string
+  end
+
+  class CustomStructWithOptionsType < ActiveModel::Type::Value
+    def initialize(options={})
+      @setting = options.delete(:setting)
+      super(options)
+    end
+
+    def cast(value)
+      case value
+      when Hash
+        CustomStructWithOptionableType.new(value.merge(setting: @setting))
+      else
+        CustomStructWithOptionableType.new(setting: @setting)
+      end
+    end
+  end
+
+  ActiveModel::Type.register(:custom_struct, CustomStructWithOptionsType)
+
+  class ModelForAttributesTestWithCustomTypeWithOptions
+    include ActiveModel::Model
+    include ActiveModelAttributes
+
+    attribute :custom_struct1, :custom_struct, setting: 42
+    attribute :custom_struct2, :custom_struct, setting: 43
+  end
+
   it "handles attributes assignment with proper type and with proper defaults" do
     data = ModelForAttributesTest.new(
       integer_field: "2.3",
@@ -107,5 +141,16 @@ describe ActiveModelAttributes do
     data.price = "$100.12"
 
     expect(data.price).to eq 10012
+  end
+
+  it "works with custom types and given specific options" do
+    data = ModelForAttributesTestWithCustomTypeWithOptions.new(
+      custom_struct1: {something_else: '12'},
+      custom_struct2: {something_else: '23'}
+    )
+    expect(data.custom_struct1.setting).to eq 42
+    expect(data.custom_struct2.setting).to eq 43
+    expect(data.custom_struct1.something_else).to eq '12'
+    expect(data.custom_struct2.something_else).to eq '23'
   end
 end

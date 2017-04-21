@@ -12,6 +12,7 @@ module ActiveModelAttributes
 
   module ClassMethods
     NO_DEFAULT_PROVIDED = Object.new
+    SERVICE_ATTRIBUTES = %i(default user_provided_default).freeze
     private_constant :NO_DEFAULT_PROVIDED
 
     def attribute(name, cast_type, **options)
@@ -32,7 +33,7 @@ module ActiveModelAttributes
 
     def define_attribute_writer(name, cast_type, options)
       define_method "#{name}=" do |val|
-        deserialized_value = ActiveModel::Type.lookup(cast_type, **options).cast(val)
+        deserialized_value = ActiveModel::Type.lookup(cast_type, **options.except(*SERVICE_ATTRIBUTES)).cast(val)
         instance_variable_set("@#{name}", deserialized_value)
       end
     end
