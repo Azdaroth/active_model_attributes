@@ -2,6 +2,11 @@
 
 ## master
 
+## 1.1.0
+
+Changes:
+  - [BUGFIX] Pass `options` argument to `ActiveModel::Type.lookup` in attribute writers @jughead
+
 ## 1.0.0
 
 Update notes:
