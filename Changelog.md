@@ -2,6 +2,8 @@
 
 ## master
 
+## 1.2.0
+
 Changes:
 - [ENHANCEMENT] Wrap definition of attributes' readers and writers inside anonymous modules to be able to call `super` by @Azdaroth
 
