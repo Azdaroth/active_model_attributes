@@ -23,19 +23,25 @@ module ActiveModelAttributes
     end
 
     def define_attribute_reader(name, options)
-      provided_default = options.fetch(:default) { NO_DEFAULT_PROVIDED }
-      define_method name do
-        return instance_variable_get("@#{name}") if instance_variable_defined?("@#{name}")
-        return if provided_default == NO_DEFAULT_PROVIDED
-        provided_default.respond_to?(:call) && provided_default.call || provided_default
+      wrapper = Module.new do
+        provided_default = options.fetch(:default) { NO_DEFAULT_PROVIDED }
+        define_method name do
+          return instance_variable_get("@#{name}") if instance_variable_defined?("@#{name}")
+          return if provided_default == NO_DEFAULT_PROVIDED
+          provided_default.respond_to?(:call) && provided_default.call || provided_default
+        end
       end
+      include wrapper
     end
 
     def define_attribute_writer(name, cast_type, options)
-      define_method "#{name}=" do |val|
-        deserialized_value = ActiveModel::Type.lookup(cast_type, **options.except(*SERVICE_ATTRIBUTES)).cast(val)
-        instance_variable_set("@#{name}", deserialized_value)
+      wrapper = Module.new do
+        define_method "#{name}=" do |val|
+          deserialized_value = ActiveModel::Type.lookup(cast_type, **options.except(*SERVICE_ATTRIBUTES)).cast(val)
+          instance_variable_set("@#{name}", deserialized_value)
+        end
       end
+      include wrapper
     end
   end
 end

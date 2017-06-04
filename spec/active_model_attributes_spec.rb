@@ -73,6 +73,28 @@ describe ActiveModelAttributes do
     attribute :custom_struct2, :custom_struct, setting: 43
   end
 
+  class ModelForAttributesTestWithOverridenReader
+    include ActiveModel::Model
+    include ActiveModelAttributes
+
+    attribute :value, :string
+
+    def value
+      super.to_s  + " overridden"
+    end
+  end
+
+  class ModelForAttributesTestWithOverridenWriter
+    include ActiveModel::Model
+    include ActiveModelAttributes
+
+    attribute :value, :string
+
+    def value=(val)
+      super(val.to_s.upcase)
+    end
+  end
+
   it "handles attributes assignment with proper type and with proper defaults" do
     data = ModelForAttributesTest.new(
       integer_field: "2.3",
@@ -103,7 +125,7 @@ describe ActiveModelAttributes do
     }.to raise_error ActiveModel::UnknownAttributeError
   end
 
-  it "handles attributes inheritance" do
+  it "handles attributes' inheritance" do
     data = ChildModelForAttributesTest.new(integer_field: "4.4")
 
     expect(data.integer_field).to eq 4
@@ -152,5 +174,17 @@ describe ActiveModelAttributes do
     expect(data.custom_struct2.setting).to eq 43
     expect(data.custom_struct1.something_else).to eq '12'
     expect(data.custom_struct2.something_else).to eq '23'
+  end
+
+  it "is possible to use `super` inside attribute reader" do
+    data =  ModelForAttributesTestWithOverridenReader.new(value: "value")
+
+    expect(data.value).to eq "value overridden"
+  end
+
+  it "is possible to use `super` inside attribute writer" do
+    data =  ModelForAttributesTestWithOverridenWriter.new(value: "value")
+
+    expect(data.value).to eq "VALUE"
   end
 end
