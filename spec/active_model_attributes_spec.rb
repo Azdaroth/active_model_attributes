@@ -95,6 +95,21 @@ describe ActiveModelAttributes do
     end
   end
 
+  class ModelForAttributesTestWithDefaultType
+    include ActiveModel::Model
+    include ActiveModelAttributes
+
+    attribute :value
+    attribute :other_value, default: 'foo'
+  end
+
+  it "handles attributes assignment with default type and with a default value" do
+    data = ModelForAttributesTestWithDefaultType.new(value: { foo: 'bar' })
+
+    expect(data.value).to eq(foo: 'bar')
+    expect(data.other_value).to eq 'foo'
+  end
+
   it "handles attributes assignment with proper type and with proper defaults" do
     data = ModelForAttributesTest.new(
       integer_field: "2.3",
