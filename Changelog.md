@@ -2,6 +2,10 @@
 
 ## master
 
+## 1.3.0
+
+- [FEATURE] Allow untyped attributes by defaulting to the `ActiveModel::Type::Value` type by @alan
+
 ## 1.2.0
 
 Changes:
