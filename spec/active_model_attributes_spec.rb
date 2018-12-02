@@ -12,6 +12,7 @@ describe ActiveModelAttributes do
     attribute :string_with_default, :string, default: "default string"
     attribute :date_field, :date, default: -> { Date.new(2016, 1, 1) }
     attribute :boolean_field, :boolean
+    attribute :boolean_with_type, ActiveModel::Type::Boolean.new
   end
 
   class ChildModelForAttributesTest < ModelForAttributesTest
@@ -162,7 +163,8 @@ describe ActiveModelAttributes do
       :decimal_field,
       :string_with_default,
       :date_field,
-      :boolean_field
+      :boolean_field,
+      :boolean_with_type
     ]
     registry = GrandchildModelForAttributesTest.attributes_registry
 
@@ -222,6 +224,7 @@ describe ActiveModelAttributes do
     expect(data.type_for_attribute(:integer_field)).to be_an_instance_of ActiveModel::Type::Integer
     expect(data.type_for_attribute(:string_field)).to be_an_instance_of ActiveModel::Type::String
     expect(data.type_for_attribute(:decimal_field)).to be_an_instance_of ActiveModel::Type::Decimal
+    expect(data.type_for_attribute(:boolean_with_type)).to be_an_instance_of ActiveModel::Type::Boolean
   end
   it "returns type information with options for available attributes" do
     data = ModelForAttributesTestWithCustomTypeWithOptions.new
