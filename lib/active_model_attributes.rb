@@ -5,6 +5,8 @@ require "active_model/type"
 module ActiveModelAttributes
   extend ActiveSupport::Concern
 
+  delegate :type_for_attribute, :has_attribute?, to: :class
+
   included do
     class_attribute :attributes_registry, instance_accessor: false
     self.attributes_registry = {}
@@ -45,6 +47,22 @@ module ActiveModelAttributes
         end
       end
       include wrapper
+    end
+
+    def type_for_attribute attr
+      type_desc = attributes_registry[attr.intern]
+      return ActiveModel::Type::Value.new unless type_desc.present?
+
+      if type_desc[0].is_a?(Symbol)
+        type, options = type_desc
+        ActiveModel::Type.lookup(type, **options.except(*SERVICE_ATTRIBUTES))
+      else
+        type_desc[0]
+      end
+    end
+
+    def has_attribute? attr
+      attributes_registry.key?(attr.intern)
     end
   end
 end

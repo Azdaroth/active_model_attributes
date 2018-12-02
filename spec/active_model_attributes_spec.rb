@@ -48,6 +48,9 @@ describe ActiveModelAttributes do
   end
 
   class CustomStructWithOptionsType < ActiveModel::Type::Value
+
+    attr_reader :setting
+
     def initialize(options={})
       @setting = options.delete(:setting)
       super(options)
@@ -201,5 +204,35 @@ describe ActiveModelAttributes do
     data =  ModelForAttributesTestWithOverridenWriter.new(value: "value")
 
     expect(data.value).to eq "VALUE"
+  end
+
+  it "checks available attributes" do
+    data = ModelForAttributesTest.new
+
+    # works with both symbol and string
+    expect(data.has_attribute?("integer_field")).to eq true
+    expect(data.has_attribute?(:integer_field)).to eq true
+    expect(data.has_attribute?("nonexisting_field")).to eq false
+    expect(data.has_attribute?(:nonexisting_field)).to eq false
+  end
+
+  it "returns type information for available attributes" do
+    data = ModelForAttributesTest.new
+
+    expect(data.type_for_attribute(:integer_field)).to be_an_instance_of ActiveModel::Type::Integer
+    expect(data.type_for_attribute(:string_field)).to be_an_instance_of ActiveModel::Type::String
+    expect(data.type_for_attribute(:decimal_field)).to be_an_instance_of ActiveModel::Type::Decimal
+  end
+  it "returns type information with options for available attributes" do
+    data = ModelForAttributesTestWithCustomTypeWithOptions.new
+
+    expect(data.type_for_attribute(:custom_struct1).setting).to be 42
+    expect(data.type_for_attribute(:custom_struct2).setting).to be 43
+  end
+
+  it "returns type information for nonexistent attributes" do
+    data = ModelForAttributesTest.new
+
+    expect(data.type_for_attribute(:nonexistent_field)).to be_an_instance_of ActiveModel::Type::Value
   end
 end
