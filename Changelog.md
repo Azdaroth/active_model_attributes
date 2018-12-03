@@ -2,6 +2,10 @@
 
 ## master
 
+## 1.4.0
+
+- [FEATURE] Add methods for introspection of types and attributes by @fsateler
+
 ## 1.3.0
 
 - [FEATURE] Allow untyped attributes by defaulting to the `ActiveModel::Type::Value` type by @alan
