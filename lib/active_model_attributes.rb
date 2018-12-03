@@ -49,9 +49,9 @@ module ActiveModelAttributes
       include wrapper
     end
 
-    def type_for_attribute attr
-      type_desc = attributes_registry[attr.intern]
-      return ActiveModel::Type::Value.new unless type_desc.present?
+    def type_for_attribute(attr)
+      type_desc = attributes_registry[attr.to_sym]
+      return ActiveModel::Type::Value.new if type_desc.nil?
 
       if type_desc[0].is_a?(Symbol)
         type, options = type_desc
@@ -61,8 +61,8 @@ module ActiveModelAttributes
       end
     end
 
-    def has_attribute? attr
-      attributes_registry.key?(attr.intern)
+    def has_attribute?(attr)
+      attributes_registry.key?(attr.to_sym)
     end
   end
 end
