@@ -74,7 +74,6 @@ Here's a list of supported types:
 * immutable_string
 * integer
 * string
-* text
 * time
 
 You can also add your custom types. Just create a class inheriting from `ActiveModel::Type::Value` or already existing type, e.g. `ActiveModel::Type::Integer`, define `cast` method and register the new type:
