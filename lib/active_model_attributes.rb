@@ -30,7 +30,7 @@ module ActiveModelAttributes
         define_method name do
           return instance_variable_get("@#{name}") if instance_variable_defined?("@#{name}")
           return if provided_default == NO_DEFAULT_PROVIDED
-          provided_default.respond_to?(:call) && provided_default.call || provided_default
+          instance_variable_set("@#{name}", provided_default.respond_to?(:call) && provided_default.call || provided_default)
         end
       end
       include wrapper
