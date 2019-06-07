@@ -13,6 +13,7 @@ describe ActiveModelAttributes do
     attribute :date_field, :date, default: -> { Date.new(2016, 1, 1) }
     attribute :boolean_field, :boolean
     attribute :boolean_with_type, ActiveModel::Type::Boolean.new
+    attribute :mutable_field, ActiveModel::Type::Value.new, default: -> { {some_array: []} }
   end
 
   class ChildModelForAttributesTest < ModelForAttributesTest
@@ -237,5 +238,15 @@ describe ActiveModelAttributes do
     data = ModelForAttributesTest.new
 
     expect(data.type_for_attribute(:nonexistent_field)).to be_an_instance_of ActiveModel::Type::Value
+  end
+
+  it "initilizes default values and stores them in instance variables" do
+    data = ModelForAttributesTest.new
+    expect(data.mutable_field).to eq(some_array: [])
+    expect(data.mutable_field.object_id).to eq data.mutable_field.object_id
+    object_id = data.mutable_field.object_id
+    data.mutable_field[:some_array] << 12
+    expect(data.mutable_field.object_id).to eq object_id
+    expect(data.mutable_field[:some_array]).to eq [12]
   end
 end
