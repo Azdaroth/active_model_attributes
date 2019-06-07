@@ -165,7 +165,8 @@ describe ActiveModelAttributes do
       :string_with_default,
       :date_field,
       :boolean_field,
-      :boolean_with_type
+      :boolean_with_type,
+      :mutable_field
     ]
     registry = GrandchildModelForAttributesTest.attributes_registry
 
