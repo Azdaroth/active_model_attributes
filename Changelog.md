@@ -2,6 +2,10 @@
 
 ## master
 
+## 1.5.0
+
+- [ENHANCEMENT] Initialize field with default value upon read by @jughead
+
 ## 1.4.0
 
 - [FEATURE] Add methods for introspection of types and attributes by @fsateler
