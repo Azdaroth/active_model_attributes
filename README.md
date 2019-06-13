@@ -20,7 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-Define you ActiveModel model class, include `ActiveModel::Model` and `ActiveModelAttributes` modules and define attributes and their types using `attribute` class method:
+Define your ActiveModel model class, include `ActiveModel::Model` and `ActiveModelAttributes` modules and define attributes and their types using `attribute` class method:
 
 ``` rb
 class MyAwesomeModel
