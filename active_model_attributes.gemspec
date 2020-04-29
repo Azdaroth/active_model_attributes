@@ -25,7 +25,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "pry"
-  spec.add_development_dependency "pry-byebug"
+  if RUBY_VERSION >= "2.4"
+    spec.add_development_dependency "pry-byebug"
+  end
   spec.add_development_dependency "coveralls"
 
   spec.add_dependency "activemodel", ">= 5.0"
