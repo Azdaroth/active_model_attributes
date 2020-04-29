@@ -2,6 +2,10 @@
 
 ## master
 
+## 1.6.0
+
+- [FEATURE] Add `attribute_types` method to match behaviour that Rails 6 ActiveModel::Attributes provides by @shevaun
+
 ## 1.5.0
 
 - [ENHANCEMENT] Initialize field with default value upon read by @jughead
