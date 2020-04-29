@@ -8,8 +8,9 @@ module ActiveModelAttributes
   delegate :type_for_attribute, :has_attribute?, to: :class
 
   included do
-    class_attribute :attributes_registry, instance_accessor: false
+    class_attribute :attributes_registry, :attribute_types, instance_accessor: false
     self.attributes_registry = {}
+    self.attribute_types = Hash.new(ActiveModel::Type.default_value)
   end
 
   module ClassMethods
@@ -22,6 +23,11 @@ module ActiveModelAttributes
 
       define_attribute_reader(name, options)
       define_attribute_writer(name, cast_type, options)
+
+      if cast_type.is_a?(Symbol)
+        cast_type = ActiveModel::Type.lookup(cast_type, **options.except(:default))
+      end
+      self.attribute_types = attribute_types.merge(name.to_s => cast_type)
     end
 
     def define_attribute_reader(name, options)

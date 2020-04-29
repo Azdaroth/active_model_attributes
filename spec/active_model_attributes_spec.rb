@@ -220,6 +220,15 @@ describe ActiveModelAttributes do
     expect(data.has_attribute?(:nonexisting_field)).to eq false
   end
 
+  describe ".attribute_types" do
+    it "returns a hash of attribute names with their type information" do
+      expect(ModelForAttributesTest.attribute_types['integer_field']).to be_an_instance_of ActiveModel::Type::Integer
+      expect(ModelForAttributesTest.attribute_types['string_field']).to be_an_instance_of ActiveModel::Type::String
+      expect(ModelForAttributesTest.attribute_types['decimal_field']).to be_an_instance_of ActiveModel::Type::Decimal
+      expect(ModelForAttributesTest.attribute_types['boolean_with_type']).to be_an_instance_of ActiveModel::Type::Boolean
+    end
+  end
+
   it "returns type information for available attributes" do
     data = ModelForAttributesTest.new
 
@@ -228,6 +237,7 @@ describe ActiveModelAttributes do
     expect(data.type_for_attribute(:decimal_field)).to be_an_instance_of ActiveModel::Type::Decimal
     expect(data.type_for_attribute(:boolean_with_type)).to be_an_instance_of ActiveModel::Type::Boolean
   end
+
   it "returns type information with options for available attributes" do
     data = ModelForAttributesTestWithCustomTypeWithOptions.new
 
